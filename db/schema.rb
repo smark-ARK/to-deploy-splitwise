@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_16_160414) do
+ActiveRecord::Schema.define(version: 2024_04_17_143745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "expenses", force: :cascade do |t|
+    t.decimal "amount", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "media"
+    t.bigint "payer_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["payer_id"], name: "index_expenses_on_payer_id"
+  end
 
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -22,6 +33,18 @@ ActiveRecord::Schema.define(version: 2024_04_16_160414) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
     t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "splits", force: :cascade do |t|
+    t.bigint "expense_id", null: false
+    t.bigint "participant_id", null: false
+    t.decimal "amount", null: false
+    t.boolean "is_settled", default: false
+    t.datetime "settled_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["expense_id"], name: "index_splits_on_expense_id"
+    t.index ["participant_id"], name: "index_splits_on_participant_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -38,6 +61,9 @@ ActiveRecord::Schema.define(version: 2024_04_16_160414) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "expenses", "users", column: "payer_id"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
+  add_foreign_key "splits", "expenses"
+  add_foreign_key "splits", "users", column: "participant_id"
 end

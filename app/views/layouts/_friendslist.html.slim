@@ -1,0 +1,4 @@
+ul.list-group
+  - friends.each do |friend|
+    li.list-group-item = friend.name
+/! = link_to 'Show All', user_friends_path(@user), class: 'btn btn-primary'

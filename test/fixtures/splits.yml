@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  expense: 
+  participant: 
+  amount: 9.99
+  is_settled: false
+
+two:
+  expense: 
+  participant: 
+  amount: 9.99
+  is_settled: false
