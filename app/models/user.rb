@@ -6,6 +6,6 @@ class User < ApplicationRecord
          
   has_many :friendships
   has_many :friends, through: :friendships
-  has_many :expenses
-  has_many :splits
+  has_many :expenses, foreign_key: :payer_id
+  has_many :splits, foreign_key: :participant_id
 end

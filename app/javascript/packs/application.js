@@ -9,6 +9,9 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
 import jQuery from 'jquery';
+import 'select2'
+import './select2_init'
+import './splits'
 window.$ = jQuery
 window.jQuery = jQuery
 
