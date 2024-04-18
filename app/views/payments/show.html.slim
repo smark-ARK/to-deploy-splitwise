@@ -1,0 +1,25 @@
+p#notice = notice
+
+p
+  strong From user:
+  = @payment.from_user
+
+p
+  strong To user:
+  = @payment.to_user
+
+p
+  strong Amount:
+  = @payment.amount
+
+p
+  strong Note:
+  = @payment.note
+
+p
+  strong Method:
+  = @payment.method
+
+=> link_to 'Edit', edit_payment_path(@payment)
+'|
+=< link_to 'Back', payments_path

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_17_143745) do
+ActiveRecord::Schema.define(version: 2024_04_18_164451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,8 +31,21 @@ ActiveRecord::Schema.define(version: 2024_04_17_143745) do
     t.bigint "friend_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "balance", default: "0.0", null: false
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
     t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "from_user_id", null: false
+    t.bigint "to_user_id", null: false
+    t.decimal "amount", null: false
+    t.text "note"
+    t.string "method", default: "cash", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["from_user_id"], name: "index_payments_on_from_user_id"
+    t.index ["to_user_id"], name: "index_payments_on_to_user_id"
   end
 
   create_table "splits", force: :cascade do |t|
@@ -64,6 +77,8 @@ ActiveRecord::Schema.define(version: 2024_04_17_143745) do
   add_foreign_key "expenses", "users", column: "payer_id"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
+  add_foreign_key "payments", "users", column: "from_user_id"
+  add_foreign_key "payments", "users", column: "to_user_id"
   add_foreign_key "splits", "expenses"
   add_foreign_key "splits", "users", column: "participant_id"
 end
