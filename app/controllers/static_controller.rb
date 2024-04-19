@@ -6,6 +6,8 @@ class StaticController < ApplicationController
   def dashboard
     @friends = fetch_friends
     @expense = Expense.new
+    @payment = Payment.new
+    @stats = get_stats
 
   end
 

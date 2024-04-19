@@ -3,32 +3,28 @@ module ExpensesConcern
 
     included do
         before_action :set_current_user
-        helper_method :balance_owed_by_me, :balance_owed_to_me, :total_balance, :splits_owed_by_me, :expenses_owed_to_me, :amount_owed_to_each_user, :amount_owed_by_each_user
-
-
+        helper_method :get_stats, :people_you_owe, :people_who_owe_you
     end
 
-    def balance_owed_by_me
-        current_user.splits.where(is_settled: false).sum(:amount)
+    def people_who_owe_you
+        Friendship.joins(:user).where(user_id: 11).where("balance > ?",0)
       end
     
-      def balance_owed_to_me
-        current_user.expenses.joins(:splits).where(splits: {is_settled: false}).sum('splits.amount')
-      end
-    
-      def total_balance
-        balance_owed_to_me - balance_owed_by_me
-      end
-
-      def splits_owed_by_me
-        Expense.joins(:splits).where(splits:{is_settled:false, participant_id: curre})
-      end
-    
-      def expenses_owed_to_me
-        current_user.expenses.joins(:splits).where(splits: {is_settled: false}).where.not(splits:{participant_id: current_user.id})
+      def people_you_owe
+        Friendship.joins(:user).where(user_id: 11).where("balance < ?",0)
       end
 
     private
+
+    def get_stats
+      Friendship.find_by_sql("
+      SELECT SUM(CASE WHEN balance < 0 THEN balance ELSE 0 END) AS amount_you_owe,
+             SUM(CASE WHEN balance > 0 THEN balance ELSE 0 END) AS amount_owed_to_you,
+             SUM(balance) AS total_balance
+      FROM friendships
+      WHERE user_id = #{@current_user.id}
+    ").first
+    end
 
     def amount_owed_to_each_user
         @current_user.splits.select('users.name as payer_name', 'participant_id', 'sum(splits.amount) as total_owed')

@@ -8,37 +8,37 @@
       h1.top-bar-title Dashboard
       .top-bar-actions
         button.btn.btn-primary type="button" data-bs-toggle="modal" data-bs-target="#expenseModal"  Add an expense
-        button.btn.btn-secondary type="button"  Settle up
+        button.btn.btn-success type="button" data-bs-toggle="modal" data-bs-target="#paymentModal"  Settle up
 
     .dashboard-balances
       .balances-bar
         .balance-block
           p total balance
-          p = number_to_currency(total_balance)
+          p = number_to_currency(@stats.total_balance)
         .balance-block
           p you owe
-          p = number_to_currency(balance_owed_by_me)
+          p = number_to_currency(@stats.amount_you_owe)
         .balance-block
           p you are owed
-          p = number_to_currency(balance_owed_to_me)
+          p = number_to_currency(@stats.amount_owed_to_you)
 
       .dashboard-detail
         .detail-block
           h2.detail-title you owe
-          - amount_owed_to_each_user.each do |data|
+          - people_you_owe.each do |data|
             .user-detail
               img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
               .user-info
-                p = "you owe $#{data.total_owed} to"
-                p = data.payer_name
+                p = "you owe $#{data.balance} to"
+                p = data.friend.name
         .detail-block
           h2.detail-title you are owed
-          - amount_owed_by_each_user.each do |data|
+          - people_who_owe_you.each do |data|
             .user-detail
               img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
               .user-info
-                p = data.participant_name
-                p = "owes you $#{data.total_owed}"
+                p = data.friend.name
+                p = "owes you $#{data.balance}"
 
 
 #expenseModal.modal.fade aria-hidden="true" aria-labelledby="expenseModalLabel" tabindex="-1" 
@@ -68,6 +68,41 @@
             = f.label :split_type
             = f.select :split_type, ['Equally', 'by_percentage', 'by_amount'], {id: 'split_type', include_blank: true}, {class: 'form-control'}
           #dynamic-fields
+          .modal-footer
+            button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
+            = f.submit 'Save changes', class: 'btn btn-primary'
+
+#paymentModal.modal.fade aria-hidden="true" aria-labelledby="paymentModalModalLabel" tabindex="-1" 
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5#paymentModalLabel.modal-title Record a Payment
+        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button" 
+      .modal-body
+        = form_with model: @payment, url: payments_path, method: :post, local: true do |f|
+          - if @payment.errors.any?
+            #error_explanation
+              h2 = "#{pluralize(@payment.errors.count, 'error')} prohibited this payment from being saved:"
+              ul
+                - @payment.errors.full_messages.each do |message|
+                  li = message
+
+          .form-group
+            = f.label :from_user
+            = f.collection_select :from_user_id, [current_user] + @friends , :id, :name, {}, {class: 'form-control'}
+          .form-group
+            = f.label :to_user
+            = f.collection_select :to_user_id,  @friends + [current_user] , :id, :name, {}, {class: 'form-control'}
+          .form-group
+            = f.label :amount
+            = f.number_field :amount, id: 'amount', class: 'form-control'
+          .form-group
+            = f.label :Note
+            = f.text_area :note, class: 'form-control'
+          .form-group
+            = f.label :method
+            = f.select :method, ['cash', 'online'], {id: 'method'}, {class: 'form-control'}
+          
           .modal-footer
             button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
             = f.submit 'Save changes', class: 'btn btn-primary'
