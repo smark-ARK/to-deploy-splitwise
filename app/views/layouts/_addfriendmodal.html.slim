@@ -1,0 +1,22 @@
+
+#addFriendModal.modal.fade aria-hidden="true" aria-labelledby="addFriendModalLabel" tabindex="-1" 
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5#addFriendModalLabel.modal-title Add Friends
+        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button" 
+      .modal-body
+        = form_with model: friendship, url: add_friend_user_path(current_user), method: :post, local: true do |f|
+          - if friendship.errors.any?
+            #error_explanation
+              h2 = "#{pluralize(friendship.errors.count, 'error')} prohibited this payment from being saved:"
+              ul
+                - friendship.errors.full_messages.each do |message|
+                  li = message
+
+          .form-group
+            = f.label :users
+            = f.select(:user_ids, (users).pluck(:name,:id), {},{ multiple: true, class: 'select2 form-control'})
+          .modal-footer
+            button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
+            = f.submit 'Add Friend', class: 'btn btn-primary'

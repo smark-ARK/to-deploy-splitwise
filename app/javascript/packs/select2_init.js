@@ -1,7 +1,14 @@
-$(document).ready(function() {
+$('#expenseModal').on('show.bs.modal', function () {
+  $('#participants').select2({
+    dropdownParent: $('#expenseModal')
+  });
+});
+
+
+  $(document).ready(function() {
     $('.select2').select2({
-        dropdownParent: $('#expenseModal'), // replace with the id of your modal
-        width: '100%' // to make the search bar wider
+        dropdownParent: $('#addFriendModal'),
+        width: '100%' 
       });
   });
   

@@ -15,17 +15,17 @@ module FriendsConcern
     @current_user.friends
   end
 
-  # def add_friend(friend_email)
-  #   friend = User.find_by(email: friend_email)
-  #   return unless friend.present? && friend != @current_user
 
-  #   @current_user.friendships.create(friend: friend)
-  # end
-
-  # def remove_friend(friend_id)
-  #   friendship = @current_user.friendships.find_by(friend_id: friend_id)
-  #   return unless friendship.present?
-
-  #   friendship.destroy
-  # end
+  def delete_friend
+    friendship = @current_user.friendships.find_by(friend_id: params[:friend_id])
+  
+    if friendship
+      friendship.destroy
+      flash[:notice] = "Friend removed successfully."
+    else
+      flash[:alert] = "This user is not your friend."
+    end
+  
+    redirect_to root_path 
+  end
 end

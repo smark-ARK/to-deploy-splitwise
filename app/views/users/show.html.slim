@@ -1,0 +1,40 @@
+.dashboard-wrapper
+  
+  .main-area
+    .top-bar
+      h1.top-bar-title = @user.name
+       
+      .top-bar-actions
+         button.btn.btn-primary type="button" data-bs-toggle="modal" data-bs-target="#expenseModal"  Add an expense
+         button.btn.btn-success type="button" data-bs-toggle="modal" data-bs-target="#paymentModal" Settle Up
+    .expenses-list
+      - @expenses.each do |expense|
+          - next if expense.expense.payer_id == expense.participant_id
+          .expense-item
+            .item-lhs
+              p = expense.created_at.strftime("%b %d").upcase
+              p = expense.expense.title
+            .item-rhs
+              - if expense.expense.payer_id == current_user.id
+                  .you-details
+                      p you paid
+                      p = "$#{expense.expense.amount}"
+                    
+                  .you-details
+                      p you lent anbu
+                      p = "$#{expense.amount}"
+              - else
+                  .you-details
+                    p He paid
+                    p = "$#{expense.expense.amount}"
+                    
+                  .you-details
+                    p He lent You
+                    p = "$#{expense.amount}"
+    
+          button.remove-btn ❌
+
+
+= render 'layouts/expensemodal', expense: @expense, friends: @friends
+
+= render 'layouts/addpaymentmodal', payment: @payment, friends: @friends

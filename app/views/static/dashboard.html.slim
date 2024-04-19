@@ -1,7 +1,10 @@
 .dashboard-wrapper
   aside.side-bar-area
     .friends-list
-      p.friends-list-header FRIENDS
+      .d-flex.justify-content-between.align-items-center
+        p.friends-list-header FRIENDS
+        button.btn.btn-sm.btn-outline-secondary.add-friend-button data-bs-toggle="modal" data-bs-target="#addFriendModal" 
+          i.bi.bi-plus
       = render 'layouts/friendslist', friends: @friends
   .main-area
     .top-bar
@@ -40,69 +43,10 @@
                 p = data.friend.name
                 p = "owes you $#{data.balance}"
 
+= render 'layouts/expensemodal', expense: @expense, friends: @friends
 
-#expenseModal.modal.fade aria-hidden="true" aria-labelledby="expenseModalLabel" tabindex="-1" 
-  .modal-dialog
-    .modal-content
-      .modal-header
-        h5#expenseModalLabel.modal-title Add an expense
-        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button" 
-      .modal-body
-        = form_with model: @expense, url: expense_index_path, method: :post, local: true do |f|
-          .form-group
-            = f.label :payer
-            = f.collection_select :payer_id, [current_user] + @friends , :id, :name, {include_blank: true}, {class: 'form-control'}
-          .form-group
-            = f.label :title
-            = f.text_field :title, class: 'form-control'
-          .form-group
-            = f.label :description
-            = f.text_area :description, class: 'form-control'
-          .form-group
-            = f.label :amount
-            = f.number_field :amount, id: 'amount', class: 'form-control'
-          .form-group
-            = f.label :participants
-            = f.select(:participant_ids, ([current_user]+@friends).pluck(:name,:id), {id: 'participants'},{ multiple: true, class: 'select2 form-control'})
-          .form-group
-            = f.label :split_type
-            = f.select :split_type, ['Equally', 'by_percentage', 'by_amount'], {id: 'split_type', include_blank: true}, {class: 'form-control'}
-          #dynamic-fields
-          .modal-footer
-            button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
-            = f.submit 'Save changes', class: 'btn btn-primary'
+= render 'layouts/addpaymentmodal', payment: @payment, friends: @friends
 
-#paymentModal.modal.fade aria-hidden="true" aria-labelledby="paymentModalModalLabel" tabindex="-1" 
-  .modal-dialog
-    .modal-content
-      .modal-header
-        h5#paymentModalLabel.modal-title Record a Payment
-        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button" 
-      .modal-body
-        = form_with model: @payment, url: payments_path, method: :post, local: true do |f|
-          - if @payment.errors.any?
-            #error_explanation
-              h2 = "#{pluralize(@payment.errors.count, 'error')} prohibited this payment from being saved:"
-              ul
-                - @payment.errors.full_messages.each do |message|
-                  li = message
+= render 'layouts/addfriendmodal', friendship: @friendship, users: @users
 
-          .form-group
-            = f.label :from_user
-            = f.collection_select :from_user_id, [current_user] + @friends , :id, :name, {}, {class: 'form-control'}
-          .form-group
-            = f.label :to_user
-            = f.collection_select :to_user_id,  @friends + [current_user] , :id, :name, {}, {class: 'form-control'}
-          .form-group
-            = f.label :amount
-            = f.number_field :amount, id: 'amount', class: 'form-control'
-          .form-group
-            = f.label :Note
-            = f.text_area :note, class: 'form-control'
-          .form-group
-            = f.label :method
-            = f.select :method, ['cash', 'online'], {id: 'method'}, {class: 'form-control'}
-          
-          .modal-footer
-            button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
-            = f.submit 'Save changes', class: 'btn btn-primary'
+

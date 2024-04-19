@@ -16,6 +16,8 @@ window.$ = jQuery
 window.jQuery = jQuery
 
 import 'bootstrap/dist/js/bootstrap'
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 require("jgrowl")
 Rails.start()
 Turbolinks.start()
