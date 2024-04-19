@@ -2,6 +2,8 @@
 
 ## Setup
 - Clone the repository in your local machine.
+- Run `bundle install`
+- Run `yarn install`
 - Run `rails db:setup`, this will also seed data in the `User` model
 - Run `rails s` to start the server and `rails c` for rails console
 
