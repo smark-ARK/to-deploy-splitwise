@@ -20,7 +20,7 @@
             = f.number_field :amount, id: 'amount', class: 'form-control'
           .form-group
             = f.label :participants
-            = f.select :participant_ids, ([current_user]+friends).pluck(:name,:id), {id: 'participants'},{ multiple: true, class: 'select2 form-control'}
+            = f.select :participant_ids, ([current_user]+friends).pluck(:name,:id), {id: 'participants'},{ multiple: true, class: 'form-control'}
           .form-group
             = f.label :split_type
             = f.select :split_type, ['Equally', 'by_percentage', 'by_amount'], {id: 'split_type', include_blank: true}, {class: 'form-control'}

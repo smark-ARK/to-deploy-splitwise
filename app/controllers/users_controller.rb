@@ -47,6 +47,12 @@ class UsersController < ApplicationController
     
       redirect_to root_path # replace with your desired path
     end
+
+    def expenses
+      @all_expenses = Split.joins(:expense, :participant)
+                     .where(expense:{ payer_id: current_user.id})
+                     .order(created_at: :desc)
+    end
     
   
     def remove_friend

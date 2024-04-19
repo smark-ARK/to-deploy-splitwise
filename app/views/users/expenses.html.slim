@@ -1,0 +1,34 @@
+.dashboard-wrapper
+  
+  .main-area
+    .top-bar
+      h1.top-bar-title = "All Expenses"
+       
+    .expenses-list
+      - @all_expenses.each do |expense|
+          - next if expense.expense.payer_id == expense.participant_id
+          .expense-item
+            .item-lhs
+              p = expense.created_at.strftime("%b %d").upcase
+              p = expense.expense.title
+            .item-rhs
+              - if expense.expense.payer_id == current_user.id
+                  .you-details
+                      p you paid
+                      p = "$#{expense.expense.amount}"
+                    
+                  .you-details
+                      p = "you lent #{expense.participant.name}"
+                      p = "$#{expense.amount}"
+              - else
+                  .you-details
+                    p "#{expense.participant.name} paid"
+                    p = "$#{expense.expense.amount}"
+                    
+                  .you-details
+                    p "#{expense.participant.name} lent You"
+                    p = "$#{expense.amount}"
+    
+          button.remove-btn ❌
+
+

@@ -10,8 +10,8 @@
     .top-bar
       h1.top-bar-title Dashboard
       .top-bar-actions
-        button.btn.btn-primary type="button" data-bs-toggle="modal" data-bs-target="#expenseModal"  Add an expense
-        button.btn.btn-success type="button" data-bs-toggle="modal" data-bs-target="#paymentModal"  Settle up
+        button.btn.btn-primary.btn-sm type="button" data-bs-toggle="modal" data-bs-target="#expenseModal"  Add an expense
+        button.btn.btn-success.btn-sm type="button" data-bs-toggle="modal" data-bs-target="#paymentModal"  Settle up
 
     .dashboard-balances
       .balances-bar
@@ -24,6 +24,8 @@
         .balance-block
           p you are owed
           p = number_to_currency(@stats.amount_owed_to_you)
+        = link_to 'All Expenses',expenses_path, class: 'btn btn-warning btn-sm'
+
 
       .dashboard-detail
         .detail-block
@@ -42,6 +44,7 @@
               .user-info
                 p = data.friend.name
                 p = "owes you $#{data.balance}"
+          
 
 = render 'layouts/expensemodal', expense: @expense, friends: @friends
 

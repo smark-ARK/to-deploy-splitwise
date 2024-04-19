@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     end
   end
   
+  get 'expenses', to: 'users#expenses', as: 'expenses'
+
   root to: "static#dashboard"
   get 'people/:id', to: 'static#person'
   resources :expense, only: [:create]
